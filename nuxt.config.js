@@ -1,4 +1,9 @@
-const pkg = require('./package')
+const { ENV } = require('./configs/env')
+
+const routerConfig = {}
+if (ENV.BASE_URL) {
+  routerConfig.base = ENV.BASE_URL
+}
 
 module.exports = {
   mode: 'universal',
@@ -7,13 +12,23 @@ module.exports = {
    ** Headers of the page
    */
   head: {
-    title: pkg.name,
+    title: 'Evotter-frontend',
     meta: [
       { charset: 'utf-8' },
       { name: 'viewport', content: 'width=device-width, initial-scale=1' },
-      { hid: 'description', name: 'description', content: pkg.description }
+      {
+        hid: 'description',
+        name: 'description',
+        content: 'Evotter-frontend-app'
+      }
     ],
     link: [{ rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' }]
+  },
+
+  srcDir: 'app/',
+
+  router: {
+    ...routerConfig
   },
 
   /*
@@ -43,6 +58,14 @@ module.exports = {
    */
   axios: {
     // See https://github.com/nuxt-community/axios-module#options
+  },
+
+  render: {
+    // ドキュメントでは object になってるが関数を定義すると独自のミドルウェアに置き換わる
+    compressor: (req, res, next) => {
+      // なにもしなければ圧縮はされない
+      next()
+    }
   },
 
   /*
